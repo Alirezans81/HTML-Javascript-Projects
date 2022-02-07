@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <table>
+        <tr>
+          <th onclick="selectNumber(1);" id="cell1">-</th>
+          <th onclick="selectNumber(2);" id="cell2">-</th>
+          <th onclick="selectNumber(3);" id="cell3">-</th>
+        </tr>
+        <tr>
+          <td onclick="selectNumber(4);" id="cell4">-</td>
+          <td onclick="selectNumber(5);" id="cell5">-</td>
+          <td onclick="selectNumber(6);" id="cell6">-</td>
+        </tr>
+        <tr>
+          <td onclick="selectNumber(7);" id="cell7">-</td>
+          <td onclick="selectNumber(8);" id="cell8">-</td>
+          <td onclick="selectNumber(9);" id="cell9">-</td>
+        </tr>
+      </table>
+      <p id="turn_text">Player 1:</p>
+      <p id="selected_text"></p>
+      <button onclick="puttingNumber();">Submit</button>
+
+    <script>
+      let selectedCellId;
+      let turn = 0;
+      let firstSelectedExist = false;
+      let rowArray = "";
+
+      function getCellId(number){
+        return "cell" + number;
+      }
+      function getButtonId(number){
+        return "button" + number;
+      }
+      
+      function selectNumber(cellNumber) {
+        if (document.getElementById("turn_text").textContent != "Player 1 won!" && document.getElementById("turn_text").textContent != "Player 2 won!") {
+          if (document.getElementById(getCellId(cellNumber)).textContent == "-") {
+            if (firstSelectedExist == false) {
+              selectedCellId = getCellId(cellNumber);
+              firstSelectedExist = true;
+              document.getElementById("selected_text").textContent = "Selected!";
+            } else {
+              document.getElementById("selected_text").textContent = "You've selected before.";
+            }
+          }else if (firstSelectedExist == true){
+            document.getElementById("selected_text").textContent = "You've selected before."
+          }else {
+            document.getElementById("selected_text").textContent = "Select another.";
+          }
+        }
+      }
+
+      function changeTurn() {
+          //changing turn variable
+          if (turn == 0) {
+              turn = 1;
+          } else {
+              turn = 0;
+          }
+          //changing turn text
+          if (document.getElementById("turn_text").textContent == "Player 1:") {
+              document.getElementById("turn_text").textContent = "Player 2:";
+          } else {
+              document.getElementById("turn_text").textContent = "Player 1:";
+          }
+        
+      }
+
+      function puttingNumber() {
+          if (document.getElementById("turn_text").textContent != "Player 1 won!" && document.getElementById("turn_text").textContent != "Player 2 won!") {
+              let the_number;
+              if (turn == 0) {
+                  the_number = 0;
+              } else {
+                  the_number = 1;
+              }
+              document.getElementById(selectedCellId).textContent = the_number;
+              document.getElementById("selected_text").textContent = "";
+              firstSelectedExist = false;
+              changeTurn();
+              winCheck();
+          }
+      }
+
+      function winCheck() {
+
+          function win() {
+              if (rowArray == "000") {
+                  document.getElementById("turn_text").textContent = "Player 1 won!"
+              } else if (rowArray == "111") {
+                  document.getElementById("turn_text").textContent = "Player 2 won!"
+              } else {
+                  rowArray = "";
+              }
+          }
+
+          //row check
+          for (let i = 1; i <= 9; i += 3) {
+              for (let j = i; j <= i + 2; j++) {
+                  rowArray += document.getElementById(getCellId(j)).textContent;
+              }
+              win();
+          }
+          //column check
+          for (let i = 1; i <= 3; i++) {
+              for(let j = i; j <= 9; j += 3) {
+                  rowArray += document.getElementById(getCellId(j)).textContent;
+              }
+              win();
+          }
+          //diameter check
+          function getCellText(cellId) {
+              return document.getElementById(getCellId(cellId)).textContent;
+          }
+          rowArray = getCellText(1) + getCellText(5) + getCellText(9)
+          win();
+          rowArray = getCellText(3) + getCellText(5) + getCellText(7)
+          win();
+      }
+    </script>
+  </body>
+</html>
